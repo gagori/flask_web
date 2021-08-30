@@ -19,7 +19,7 @@ def articles():
     
 @app.route('/detail/<ids>')
 def detail(ids):
-
+    
     return ids
 
 
