@@ -16,6 +16,12 @@ def index():
 def articles():
     list_data = Articles()
     return render_template('articles.html', data = list_data)
+    
+@app.route('/detail/<ids>')
+def detail(ids):
+
+    return ids
+
 
 if __name__ == '__main__':
     app.run(debug=True)
