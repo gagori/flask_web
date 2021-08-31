@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect
 from data import Articles
 import pymysql
 
@@ -31,19 +31,26 @@ def articles():
     print(topics)
     return render_template('articles.html', data = topics)
     
-@app.route('/detail/<ids>')
+@app.route('/detail/<ids>')  # <> params처리
 def detail(ids):
     # list_data = Articles()
     cursor = db_connection.cursor()
     sql = f'SELECT * FROM list WHERE id={int(ids)};'
     cursor.execute(sql)
-    topic = cursor.fetchone()
+    topic = cursor.fetchone()       # fetchall이면 튜플 속 튜플로 나오니 인덱싱 복잡. fetchone으로 하나의 튜플 인덱싱 이지.
     print(topic)
     # for data in list_data:
     #     if data['id'] == int(ids):
     #         article = data
     return render_template('article.html', article1=topic)
 
-
+@app.route('/delete/<ids>', methods=['GET','POST'])
+def delete(ids):
+    cursor =db_connection.cursor()
+    sql = f'DELETE FROM list WHERE id={int(ids)};'   # DB에서 Delete Row(s)하는 쿼리문. DB에서 삭제하면 당연히 사이트에 안뜨겟지 오!
+    cursor.execute(sql)
+    db_connection.commit()         # 수정, 추가시에는 db_connection에다 commit해줘야함. (조회시에는 커서에다 fetch하지만.)
+    return redirect('/articles')  # 왜render_template? 데이터를 또 던져줘야..
+                                            # redirect로 /articles로 바로 갈 수  있음.
 if __name__ == '__main__':
     app.run(debug=True)
