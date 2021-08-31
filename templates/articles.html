@@ -1,95 +1,56 @@
-<!DOCTYPE html>
-<html lang="en">
+ {% extends 'layout.html' %} {% block body %}
+</h1>게시판</h1>
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Custom fonts for this template -->
-    <link href="{{url_for('static', filename='vendor/fontawesome-free/css/all.min.css')}}" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">LIST Page</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
 
-    <!-- Custom styles for this template -->
-    <link href="{{url_for('static', filename='css/sb-admin-2.min.css')}}" rel="stylesheet">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <table class="table table-bordered dataTable" id="dataTable" width="100%" cellspacing="0" role="grid" aria-describedby="dataTable_info" style="width: 100%;">
+                            <thead>
+                                <tr role="row">
+                                    <th class="sorting sorting_asc" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 271px;">ID</th>
+                                    <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 403px;">TITLE</th>
+                                    <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 199px;">AUTHOR</th>
+                                    <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 101px;">DATE</th>
+                                    <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-label="Start date: activate to sort column ascending" style="width: 189px;">EDIT</th>
 
-    <!-- Custom styles for this page -->
-    <link href="{{url_for('static', filename='vendor/datatables/dataTables.bootstrap4.min.css')}}" rel="stylesheet">
-    <title>게시판</title>
-</head>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th rowspan="1" colspan="1">ID</th>
+                                    <th rowspan="1" colspan="1">TITLE</th>
+                                    <th rowspan="1" colspan="1">AUTHOR</th>
+                                    <th rowspan="1" colspan="1">DATE</th>
+                                    <th rowspan="1" colspan="1">EDIT</th>
 
-<body>
-    <h1>게시판</h1>
+                                </tr>
+                            </tfoot>
+                            <tbody>
 
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">LIST Page</h6>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4">
+                                {% for i in data %}
+                                <tr class="odd">
+                                    <td class="sorting_1">{{i['id']}}</td>
+                                    <td><a href="/detail/{{i['id']}}">{{i['title']}}</a></td>
+                                    <td>{{i['author']}}</td>
+                                    <td>{{i['create_at']}}</td>
+                                    <td><button class="btn btn-primary ">편집</button><button class="btn btn-danger">삭제</button></td>
+                                </tr>
+                                {% endfor %}
 
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <table class="table table-bordered dataTable" id="dataTable" width="100%" cellspacing="0" role="grid" aria-describedby="dataTable_info" style="width: 100%;">
-                                <thead>
-                                    <tr role="row">
-                                        <th class="sorting sorting_asc" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 271px;">ID</th>
-                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 403px;">TITLE</th>
-                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 199px;">AUTHOR</th>
-                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 101px;">DATE</th>
-                                        <th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-label="Start date: activate to sort column ascending" style="width: 189px;">EDIT</th>
-
-                                    </tr>
-                                </thead>
-                                <tfoot>
-                                    <tr>
-                                        <th rowspan="1" colspan="1">ID</th>
-                                        <th rowspan="1" colspan="1">TITLE</th>
-                                        <th rowspan="1" colspan="1">AUTHOR</th>
-                                        <th rowspan="1" colspan="1">DATE</th>
-                                        <th rowspan="1" colspan="1">EDIT</th>
-
-                                    </tr>
-                                </tfoot>
-                                <tbody>
-
-                                    {% for i in data %}
-                                    <tr class="odd">
-                                        <td class="sorting_1">{{i['id']}}</td>
-                                        <td><a href="/detail/{{i['id']}}">{{i['title']}}</a></td>
-                                        <td>{{i['author']}}</td>
-                                        <td>{{i['create_at']}}</td>
-                                        <td><button class="btn btn-primary ">편집</button><button class="btn btn-danger">삭제</button></td>
-                                    </tr>
-                                    {% endfor %}
-
-                                </tbody>
-                            </table>
-                        </div>
+                            </tbody>
+                        </table>
                     </div>
-
                 </div>
+
             </div>
         </div>
     </div>
-
-    <!-- Bootstrap core JavaScript-->
-    <script src="{{ url_for( 'static', filename='vendor/jquery/jquery.min.js')}}"></script>
-    <script src="{{ url_for( 'static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
-
-    <!-- Core plugin JavaScript-->
-    <script src="{{ url_for( 'static', filename='vendor/jquery-easing/jquery.easing.min.js')}}"></script>
-
-    <!-- Custom scripts for all pages-->
-    <script src="{{ url_for( 'static', filename='js/sb-admin-2.min.js')}}"></script>
-
-    <!-- Page level plugins -->
-    <script src="{{ url_for( 'static', filename='vendor/datatables/jquery.dataTables.min.js')}}"></script>
-    <script src="{{ url_for( 'static', filename='vendor/datatables/dataTables.bootstrap4.min.js')}}"></script>
-
-    <!-- Page level custom scripts -->
-    <script src="{{ url_for( 'static', filename='js/demo/datatables-demo.js')}}"></script>
-
-</body>
-
-</html>
+</div>
+{% endblock %}
