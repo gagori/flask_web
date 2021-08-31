@@ -36,10 +36,10 @@
 
                                 {% for i in data %}
                                 <tr class="odd">
-                                    <td class="sorting_1">{{i['id']}}</td>
-                                    <td><a href="/detail/{{i['id']}}">{{i['title']}}</a></td>
-                                    <td>{{i['author']}}</td>
-                                    <td>{{i['create_at']}}</td>
+                                    <td class="sorting_1">{{i[0]}}</td>
+                                    <td><a href="/detail/{{i[0]}}">{{i[1]}}</a></td>
+                                    <td>{{i[3]}}</td>
+                                    <td>{{i[4]}}</td>
                                     <td><button class="btn btn-primary ">편집</button><button class="btn btn-danger">삭제</button></td>
                                 </tr>
                                 {% endfor %}

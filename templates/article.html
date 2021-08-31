@@ -1,10 +1,10 @@
 {% extends 'layout.html' %} {% block body%}
 
 <div class="jumbotron">
-    <h1 class="display-4">{{article1['title']}}</h1>
-    <p class="lead">{{article1['desc']}}</p>
+    <h1 class="display-4">{{article1[1]}}</h1>
+    <p class="lead">{{article1[2]}}</p>
     <hr class="my-4">
-    <p>AUTHOR : {{article1['author']}}</p>
+    <p>AUTHOR : {{article1[3]}}</p>
     <a class="btn btn-primary" href="/articles" role="button">BACK</a>
 </div>
 {% endblock %}
