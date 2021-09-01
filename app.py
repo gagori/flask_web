@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect
+from flask import Flask, render_template, redirect, request
 from data import Articles
 import pymysql
 
@@ -44,13 +44,31 @@ def detail(ids):
     #         article = data
     return render_template('article.html', article1=topic)
 
+# post방식 구현, request모듈 사용
+@app.route('/add_article', methods=['GET','POST'])
+def add_article():
+    if request.method == "GET":
+        return render_template('add_article.html')
+    else:
+        title = request.form["title"]
+        descs = request.form["desc1"]
+        author = request.form["author"]
+        
+        cursor = db_connection.cursor()
+        sql = f"INSERT INTO list (title, description, author) VALUES ('{title}', '{descs}', '{author}');"
+        cursor.execute(sql)
+        db_connection.commit()
+        return redirect('/articles')   # /add_article 경로에서 /articles경로로 다시 돌아감.
+
 @app.route('/delete/<ids>', methods=['GET','POST'])
 def delete(ids):
     cursor =db_connection.cursor()
     sql = f'DELETE FROM list WHERE id={int(ids)};'   # DB에서 Delete Row(s)하는 쿼리문. DB에서 삭제하면 당연히 사이트에 안뜨겟지 오!
     cursor.execute(sql)
     db_connection.commit()         # 수정, 추가시에는 db_connection에다 commit해줘야함. (조회시에는 커서에다 fetch하지만.)
-    return redirect('/articles')  # 왜render_template? 데이터를 또 던져줘야..
-                                            # redirect로 /articles로 바로 갈 수  있음.
+    return redirect('/articles')   # 왜render_template? 데이터를 또 던져줘야..
+                                   # redirect로 /articles로 바로 갈 수 있음.
+
+
 if __name__ == '__main__':
     app.run(debug=True)
