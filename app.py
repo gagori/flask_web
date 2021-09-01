@@ -22,6 +22,21 @@ def index():
     name = "JUNG"
     return render_template('index.html', data=name)
 
+@app.route('/register', methods=['GET','POST'])
+def register():
+    if request.method =='GET':
+        return render_template('register.html')
+    else:
+        username = request.form["username2"]
+        email = request.form["email2"]
+        password = request.form["password2"]
+
+        cursor = db_connection.cursor()
+        sql = f"INSERT INTO users (username, email, password) VALUES ('{username}', '{email}', '{password}');"
+        cursor.execute(sql)
+        db_connection.commit()
+        return redirect('/')
+
 @app.route('/articles', methods=['GET','POST'])
 def articles():
     # list_data = Articles()   # 목업데이터가 아니라 연결된 DB에서 불러오기위함. # DB가 튜플로 만들어지므로 html파일에서 기존 딕셔너리문법 말고, 튜플 인덱스를 사용한다!
@@ -86,7 +101,7 @@ def edit_article(ids):
 @app.route('/delete/<ids>', methods=['GET','POST'])
 def delete(ids):
     cursor =db_connection.cursor()
-    sql = f'DELETE FROM list WHERE id={int(ids)};'   # DB에서 Delete Row(s)하는 쿼리문. DB에서 삭제하면 당연히 사이트에 안뜨겟지 오!
+    sql = f'DELETE FROM list WHERE id={int(ids)};'   # DB에서 Delete Row(s)하는 쿼리문.
     cursor.execute(sql)
     db_connection.commit()         # 수정, 추가시에는 db_connection에다 commit해줘야함. (조회시에는 커서에다 fetch하지만.)
     return redirect('/articles')   # 왜render_template? 데이터를 또 던져줘야..
