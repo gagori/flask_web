@@ -1,4 +1,5 @@
 from flask import Flask, render_template, redirect, request
+from flask.signals import request_tearing_down
 from data import Articles
 import pymysql
 
@@ -51,14 +52,36 @@ def add_article():
         return render_template('add_article.html')
     else:
         title = request.form["title"]
-        descs = request.form["desc1"]
+        desc = request.form["desc"]
         author = request.form["author"]
         
         cursor = db_connection.cursor()
-        sql = f"INSERT INTO list (title, description, author) VALUES ('{title}', '{descs}', '{author}');"
+        sql = f"INSERT INTO list (title, description, author) VALUES ('{title}', '{desc}', '{author}');"
         cursor.execute(sql)
         db_connection.commit()
         return redirect('/articles')   # /add_article 경로에서 /articles경로로 다시 돌아감.
+
+@app.route('/edit_article/<ids>', methods=['GET','POST'])
+def edit_article(ids):
+    if request.method == 'GET':
+        cursor = db_connection.cursor()
+        sql = f'SELECT * FROM list WHERE id={int(ids)};'
+        cursor.execute(sql)
+        topic = cursor.fetchone()       # select 즉, 조회니까 commit없이.
+        print(topic)
+        return render_template('edit_article.html', article1=topic)
+        
+    else:
+        title = request.form["title"]
+        desc = request.form["desc"]
+        author = request.form["author"]
+
+        cursor = db_connection.cursor()
+        sql = f"UPDATE list SET title = '{title}', description = '{desc}', author = '{author}' WHERE (id = {int(ids)});"
+        cursor.execute(sql)
+        db_connection.commit()
+        return redirect('/articles')
+
 
 @app.route('/delete/<ids>', methods=['GET','POST'])
 def delete(ids):
