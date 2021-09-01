@@ -3,6 +3,8 @@ from flask.signals import request_tearing_down
 from data import Articles
 import pymysql
 
+
+
 db_connection = pymysql.connect(
 	    user    = 'root',
         passwd  = '1234',
@@ -30,12 +32,20 @@ def register():
         username = request.form["username2"]
         email = request.form["email2"]
         password = request.form["password2"]
-
         cursor = db_connection.cursor()
-        sql = f"INSERT INTO users (username, email, password) VALUES ('{username}', '{email}', '{password}');"
-        cursor.execute(sql)
-        db_connection.commit()
-        return redirect('/')
+
+        # email 중복을 조회하기 위해
+        sql_1 = f"SELECT * FROM users WHERE email='{email}'"
+        cursor.execute(sql_1)
+        user = cursor.fetchone()  # 조회니까 commit없이 fetchone으로 조회.
+        print(user)
+        if user == None:
+            sql = f"INSERT INTO users (username, email, password) VALUES ('{username}', '{email}', '{password}');"
+            cursor.execute(sql)
+            db_connection.commit()
+            return redirect('/')
+        else:
+            return redirect('/register')
 
 @app.route('/articles', methods=['GET','POST'])
 def articles():
