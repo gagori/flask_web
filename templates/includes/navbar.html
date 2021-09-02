@@ -18,5 +18,8 @@
         </ul>
 
     </div>
-    <a href="/register" style="float: right;"><button class="bg-success">회원가입</button></a>
+    {% if user|length == 0 %}
+    <a href="/login" style="float: right;"><button class="btn btn-success">로그인</button></a>
+    <a href="/register" style="float: right;"><button class="btn btn-primary">회원가입</button></a> {% else %}
+    <a href="/logout" style="float: right;"><button class="btn btn-primary">로그아웃</button></a> {% endif %}
 </nav>

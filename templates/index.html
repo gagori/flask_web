@@ -1,4 +1,8 @@
 {% extends 'layout.html' %} {% block body%}
 <h1>INDEX PAGE</h1>
-<h1>Hello {{ data }}</h1>
-{% endblock %}
+
+{% if user|length == 0 %}
+<h1>Hello GUEST</h1>
+{% else %}
+<h1>Hello {{ user['username'] }}</h1>
+{% endif %} {% endblock %}
