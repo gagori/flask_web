@@ -2,7 +2,7 @@ from flask import Flask, render_template, redirect, request
 from flask.signals import request_tearing_down
 from data import Articles
 import pymysql
-
+from passlib.hash import pbkdf2_sha256
 
 
 db_connection = pymysql.connect(
@@ -31,7 +31,7 @@ def register():
     else:
         username = request.form["username2"]
         email = request.form["email2"]
-        password = request.form["password2"]
+        password = pbkdf2_sha256.hash(request.form["password2"])   # 비밀번호를 hash코드로 바꾼 것이 DB에 들어가게 된다.
         cursor = db_connection.cursor()
 
         # email 중복을 조회하기 위해
@@ -46,6 +46,35 @@ def register():
             return redirect('/')
         else:
             return redirect('/register')
+
+
+@app.route('/login', methods=['GET','POST'])
+def login():
+    if request.method == 'GET':
+        return render_template('login.html')
+    else:
+        email = request.form['email']
+        password = request.form['password']
+        #이제 db조회
+        sql_1 = f"SELECT * FROM users WHERE email='{email}'"
+        cursor = db_connection.cursor()
+        cursor.execute(sql_1)
+        user = cursor.fetchone()
+        print(user)                 # email이 기존 DB에 있을때 : 튜플형식으로 조회됨. 없을때 : None뜸.(어떤형식으로 데이터가 오는지 확인해야함!!)
+        # return "success"   
+        if user == None:
+            return redirect('/login')
+        else:
+            # 이제 비밀번호 확인
+            # 조회해온 데이터가 튜플이므로 튜플사용.
+            # verify이용.
+            result =  pbkdf2_sha256.verify(password, user[3])
+            if result == True:
+                return "SUCCESS"
+            else:
+                return redirect('login')
+            
+
 
 @app.route('/articles', methods=['GET','POST'])
 def articles():

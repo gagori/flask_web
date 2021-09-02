@@ -20,8 +20,9 @@
 from passlib.hash import pbkdf2_sha256
 
 hash = pbkdf2_sha256.hash("1234")
-print(hash)
+print(hash)               # 비밀번호 등을 해쉬코드로 바꾸는 것을 encoding이라고 한다. <-> decoding
+
+# 우리는 decode할 순 없지만 verify로 동일한지 확인할 수 있다.
 
 result = pbkdf2_sha256.verify("1234", hash)
-
 print(result)
